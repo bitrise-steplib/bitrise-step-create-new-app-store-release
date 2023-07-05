@@ -2,11 +2,12 @@ package step
 
 import (
 	"fmt"
+
+	"github.com/bitrise-io/go-steputils/v2/export"
 	"github.com/bitrise-io/go-steputils/v2/stepconf"
 	"github.com/bitrise-io/go-utils/v2/env"
 	"github.com/bitrise-io/go-utils/v2/log"
-	"github.com/bitrise-steplib/tmp-bitrise-step-create-new-app-store-release/api"
-	"github.com/bitrise-steplib/tmp-bitrise-step-create-new-app-store-release/export"
+	"github.com/bitrise-steplib/bitrise-step-create-new-app-store-release/api"
 )
 
 const (
@@ -17,13 +18,15 @@ const (
 type ReleaseExecutor struct {
 	inputParser   stepconf.InputParser
 	envRepository env.Repository
+	exporter      export.Exporter
 	logger        log.Logger
 }
 
-func NewReleaseExecutor(inputParser stepconf.InputParser, envRepository env.Repository, logger log.Logger) ReleaseExecutor {
+func NewReleaseExecutor(inputParser stepconf.InputParser, envRepository env.Repository, exporter export.Exporter, logger log.Logger) ReleaseExecutor {
 	return ReleaseExecutor{
 		inputParser:   inputParser,
 		envRepository: envRepository,
+		exporter:      exporter,
 		logger:        logger,
 	}
 }
@@ -41,7 +44,7 @@ func (r ReleaseExecutor) ProcessConfig() (Config, error) {
 
 	return Config{
 		BitriseApiBaseUrl:         input.BitriseApiBaseUrl,
-		BitriseApiAccessToken:     string(input.BitriseApiAccessToken),
+		BitriseApiAccessToken:     input.BitriseApiAccessToken,
 		AppSlug:                   input.AppSlug,
 		AutomaticTestflightUpload: input.AutomaticTestflightUpload,
 		BundleID:                  input.BundleID,
@@ -72,6 +75,8 @@ func (r ReleaseExecutor) Run(config Config) (Result, error) {
 		return Result{}, err
 	}
 
+	r.logger.Donef("Release successfully created.")
+
 	return Result{
 		ReleaseUrl:  fmt.Sprintf("this-should-be-the-release-url/%s", response.Id),
 		ReleaseSlug: response.Id,
@@ -79,8 +84,6 @@ func (r ReleaseExecutor) Run(config Config) (Result, error) {
 }
 
 func (r ReleaseExecutor) Export(result Result) error {
-	exporter := export.NewExporter(r.envRepository)
-
 	r.logger.Printf("The following outputs are exported as environment variables:")
 
 	values := map[string]string{
@@ -90,7 +93,7 @@ func (r ReleaseExecutor) Export(result Result) error {
 	}
 
 	for key, value := range values {
-		err := exporter.Export(key, value)
+		err := r.exporter.ExportOutput(key, value)
 		if err != nil {
 			return err
 		}

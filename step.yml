@@ -1,5 +1,5 @@
 ---
-title: Create App Store Release
+title: Prepare App Store Release
 summary: The Step creates an App Store release with the Release Management feature.
 description: |-
   Create and configure a new release to App Store Connect with Release Management.
@@ -12,7 +12,6 @@ type_tags:
 
 project_type_tags:
 - ios
-- macos
 - react-native
 - cordova
 - ionic
@@ -28,6 +27,8 @@ inputs:
     title: Bundle identifier
     summary: The bundle ID of the app to be released.
     description: |-
+      The bundle ID of the app to be released. 
+      
       Release Management requires the bundle ID of the iOS application being released to the App Store Connect.
     is_required: true
 
@@ -36,6 +37,8 @@ inputs:
     title: Release version number
     summary: The version number of the app you are releasing.
     description: |-
+      The version number of the app you are releasing.
+      
       Numbering should follow software versioning conventions (1.0, 1.0.0).
     is_required: true
 
@@ -45,6 +48,8 @@ inputs:
     title: Automatic Testflight upload
     summary: Indicates whether or not to upload every release candidate build automatically to TestFlight.
     description: |-
+      Indicates whether or not to upload every release candidate build automatically to TestFlight.
+      
       Release Management will deploy each release candidate to TestFlight automatically if this setting is enabled.
       Note: This feature requires the release branch and Workflow to be set.
     is_required: true
@@ -58,6 +63,8 @@ inputs:
     title: Release description
     summary: An internal description of the release, it won't be propagated to the App Store.
     description: |-
+      An internal description of the release, it won't be propagated to the App Store.
+      
       This description will not be visible on the App Store Connect or available for the end user.
 
 - release_branch:
@@ -66,6 +73,8 @@ inputs:
     title: Release branch
     summary: The branch you created for this version of your app.
     description: |-
+      The branch you created for this version of your app.
+      
       This branch is called mostly: release-1.0, release-october, main, etc.
 
 - workflow:
@@ -74,6 +83,8 @@ inputs:
     title: Release Workflow
     summary: The workflow that generates your an .xcarchive or an App Store signed .ipa artifact.
     description: |-
+      The workflow that generates your an .xcarchive or an App Store signed .ipa artifact.
+      
       Make sure that the Workflow generates the artifact for the same Bundle Identifier you provided for this Step as a step input. Release Management will ignore any other .xcarchive App Store signed .ipa with different bundle ID.
 
 - slack_webhook_url:
@@ -82,6 +93,8 @@ inputs:
     title: Slack webhook URL
     summary: The Slack webhook URL to use for sending Slack notifications.
     description: |-
+      The Slack webhook URL to use for sending Slack notifications.
+      
       By providing a Slack webhook URL, Release Management will send automatic messages for the following events:
       ```
       ┌─────────────────────┬───────────────────────────────────────┐
@@ -103,6 +116,8 @@ inputs:
     title: Teams webhook URL
     summary: The Teams webhook URL to use for sending Teams notifications.
     description: |-
+      The Teams webhook URL to use for sending Teams notifications.
+      
       By providing a Teams webhook URL, Release Management will send automatic messages for the following events:
       ```
       ┌─────────────────────┬───────────────────────────────────────┐
@@ -124,6 +139,8 @@ inputs:
     title: Bitrise Access Token
     summary: Your access token.
     description: |-
+      Your access token.
+      
       To acquire a `Personal Access Token` for your user, sign in with that user on [bitrise.io](https://bitrise.io),
       go to your `Account Settings` page, and select the [Security tab](https://www.bitrise.io/me/profile#/security) on the left side.
     is_required: true
@@ -135,6 +152,8 @@ inputs:
     title: Bitrise API base URL
     summary: The base URL of the Bitrise API used to process the download requests.
     description: |-
+      The base URL of the Bitrise API used to process the download requests.
+      
       By default the step will use the official Bitrise Public API, you don’t need to change this setting.
     is_required: true
     is_dont_change_value: true
@@ -145,6 +164,8 @@ inputs:
     title: Bitrise app identifier
     summary: The identifier of the Bitrise app for which to create a new release.
     description: |-
+      The identifier of the Bitrise app for which to create a new release.
+      
       By default, the Step will create a new release for the same Bitrise App.
     is_required: true
     is_dont_change_value: true

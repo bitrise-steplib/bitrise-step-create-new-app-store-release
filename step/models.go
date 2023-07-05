@@ -19,7 +19,7 @@ type Input struct {
 
 type Config struct {
 	BitriseApiBaseUrl         string
-	BitriseApiAccessToken     string
+	BitriseApiAccessToken     stepconf.Secret
 	AppSlug                   string
 	AutomaticTestflightUpload bool
 	BundleID                  string

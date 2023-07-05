@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/bitrise-io/go-utils/v2/log"
-	"github.com/bitrise-steplib/tmp-bitrise-step-create-new-app-store-release/api/mocks"
+	"github.com/bitrise-steplib/bitrise-step-create-new-app-store-release/api/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

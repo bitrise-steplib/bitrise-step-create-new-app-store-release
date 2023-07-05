@@ -1,17 +1,21 @@
 package step
 
 import (
-	"github.com/bitrise-io/go-steputils/v2/stepconf"
-	"github.com/bitrise-io/go-utils/v2/log"
-	"github.com/bitrise-steplib/tmp-bitrise-step-create-new-app-store-release/export/mocks"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/bitrise-io/go-steputils/v2/export"
+	"github.com/bitrise-io/go-steputils/v2/stepconf"
+	"github.com/bitrise-io/go-utils/v2/command"
+	"github.com/bitrise-io/go-utils/v2/env"
+	"github.com/bitrise-io/go-utils/v2/log"
+	"github.com/bitrise-steplib/bitrise-step-create-new-app-store-release/step/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestConfigParsing(t *testing.T) {
 	config := Config{
 		BitriseApiBaseUrl:         "base-url",
-		BitriseApiAccessToken:     "access-token",
+		BitriseApiAccessToken:     stepconf.Secret("access-token"),
 		AppSlug:                   "app-slug",
 		AutomaticTestflightUpload: false,
 		BundleID:                  "bundle-id",
@@ -25,7 +29,7 @@ func TestConfigParsing(t *testing.T) {
 
 	mockEnvRepository := mocks.NewRepository(t)
 	mockEnvRepository.On("Get", "bitrise_api_base_url").Return(config.BitriseApiBaseUrl)
-	mockEnvRepository.On("Get", "bitrise_api_access_token").Return(config.BitriseApiAccessToken)
+	mockEnvRepository.On("Get", "bitrise_api_access_token").Return(string(config.BitriseApiAccessToken))
 	mockEnvRepository.On("Get", "app_slug").Return(config.AppSlug)
 
 	automaticTestflightUpload := "false"
@@ -44,7 +48,8 @@ func TestConfigParsing(t *testing.T) {
 	mockEnvRepository.On("Get", "verbose").Return("false")
 
 	inputParser := stepconf.NewInputParser(mockEnvRepository)
-	sut := NewReleaseExecutor(inputParser, mockEnvRepository, log.NewLogger())
+	exporter := export.NewExporter(mocks.NewFactory(t))
+	sut := NewReleaseExecutor(inputParser, mockEnvRepository, exporter, log.NewLogger())
 
 	receivedConfig, err := sut.ProcessConfig()
 	assert.NoError(t, err)
@@ -59,16 +64,28 @@ func TestExport(t *testing.T) {
 		ReleaseSlug: "release-slug",
 	}
 
-	mockEnvRepository := mocks.NewRepository(t)
+	cmd := testCommand()
+	mockFactory := mocks.NewFactory(t)
 	//TODO: Enable it later
-	//mockEnvRepository.On("Set", "BITRISE_RELEASE_URL", result.ReleaseUrl).Return(nil)
-	mockEnvRepository.On("Set", "BITRISE_RELEASE_SLUG", result.ReleaseSlug).Return(nil)
+	//mockFactory.On("Create", "envman", mockParameters("BITRISE_RELEASE_URL", result.ReleaseUrl), (*command.Opts)(nil)).Return(cmd)
+	mockFactory.On("Create", "envman", mockParameters("BITRISE_RELEASE_SLUG", result.ReleaseSlug), (*command.Opts)(nil)).Return(cmd)
 
+	mockEnvRepository := mocks.NewRepository(t)
 	inputParser := stepconf.NewInputParser(mockEnvRepository)
-	sut := NewReleaseExecutor(inputParser, mockEnvRepository, log.NewLogger())
+	exporter := export.NewExporter(mockFactory)
+	sut := NewReleaseExecutor(inputParser, mockEnvRepository, exporter, log.NewLogger())
 
 	err := sut.Export(result)
 	assert.NoError(t, err)
 
 	mockEnvRepository.AssertExpectations(t)
+}
+
+func testCommand() command.Command {
+	factory := command.NewFactory(env.NewRepository())
+	return factory.Create("pwd", []string{}, nil)
+}
+
+func mockParameters(key, value string) []string {
+	return []string{"add", "--key", key, "--value", value}
 }
