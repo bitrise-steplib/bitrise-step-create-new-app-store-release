@@ -7,7 +7,11 @@ The Step creates an App Store release with the Release Management feature.
 <details>
 <summary>Description</summary>
 
-Create and configure a new release to App Store Connect with Release Management.
+The "Prepare App Store Release" Step allows you to streamline the process of preparing a new release for your iOS app in the Release Management. This Step leverages the Bitrise Public API to facilitate the creation and configuration of an App Store release in the Release Management.
+
+By utilizing this Step, you can automate the initial stages of the release process and ensure a consistent and efficient deployment experience. Instead of manually navigating through the Release Management interface to create a release, the Step empowers you to initiate the release setup programmatically, saving valuable time and effort.
+
+It's important to note that this Step doesn't create a release directly in the App Store Connect. Instead, it streamlines the process by generating a release in the [Release Management](https://devcenter.bitrise.io/en/release-management.html).
 </details>
 
 ## 🧩 Get started
@@ -23,7 +27,7 @@ You can also run this step directly with [Bitrise CLI](https://github.com/bitris
 
 | Key | Description | Flags | Default |
 | --- | --- | --- | --- |
-| `bundle_id` | The bundle ID of the app to be released.   Release Management requires the bundle ID of the iOS application being released to the App Store Connect. | required |  |
+| `bundle_id` | The bundle ID of the app to be released.  Release Management requires the bundle ID of the iOS application being released to the App Store Connect. | required |  |
 | `release_version_number` | The version number of the app you are releasing.  Numbering should follow software versioning conventions (1.0, 1.0.0). | required |  |
 | `automatic_testflight_upload` | Indicates whether or not to upload every release candidate build automatically to TestFlight.  Release Management will deploy each release candidate to TestFlight automatically if this setting is enabled. Note: This feature requires the release branch and Workflow to be set. | required | `false` |
 | `description` | An internal description of the release, it won't be propagated to the App Store.  This description will not be visible on the App Store Connect or available for the end user. |  |  |

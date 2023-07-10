@@ -2,7 +2,11 @@
 title: Prepare App Store Release
 summary: The Step creates an App Store release with the Release Management feature.
 description: |-
-  Create and configure a new release to App Store Connect with Release Management.
+  The "Prepare App Store Release" Step allows you to streamline the process of preparing a new release for your iOS app in the Release Management. This Step leverages the Bitrise Public API to facilitate the creation and configuration of an App Store release in the Release Management.
+  
+  By utilizing this Step, you can automate the initial stages of the release process and ensure a consistent and efficient deployment experience. Instead of manually navigating through the Release Management interface to create a release, the Step empowers you to initiate the release setup programmatically, saving valuable time and effort.
+  
+  It's important to note that this Step doesn't create a release directly in the App Store Connect. Instead, it streamlines the process by generating a release in the [Release Management](https://devcenter.bitrise.io/en/release-management.html).
 website: https://github.com/bitrise-steplib/bitrise-step-create-new-app-store-release
 source_code_url: https://github.com/bitrise-steplib/bitrise-step-create-new-app-store-release
 support_url: https://github.com/bitrise-steplib/bitrise-step-create-new-app-store-release/issues
